@@ -1,12 +1,11 @@
-//Extent Report
+////////////////////////////////////Extent Report//////////////////////////////////////////
 String path=System.setProperty("path");
 ExtentSparkReporter report= new ExtentSparkReporter(path);
-
 ExtentReports extent = new ExtentReports();
 extent.attachReporter(report);
 ExtentTest test = new extent.createTest("initial demo");
 extent.flush();
-
+////////////////////////////////////////////////////////////////////////////////////////////
 Basic Extent Report Questions
 	1. What is Extent Reports in Selenium?
 		○ Extent Reports is a logging and reporting library used to generate detailed, interactive HTML reports for Selenium test executions.
