@@ -1,0 +1,62 @@
+Common Issues Faced When Setting Up Selenium Java Scripts from Scratch
+
+🔧 1. Environment & Dependency Issues
+Issue	Root Cause	Solution
+WebDriver class not found	Selenium JARs not added	Use Maven with proper pom.xml
+Browser driver not recognized	Missing ChromeDriver/GeckoDriver	Use WebDriverManager to handle it automatically
+Incompatible driver/browser versions	ChromeDriver vs Chrome version mismatch	Use latest compatible versions OR WebDriverManager
+Java version issues	Using unsupported JDK version for a lib	Stick with JDK 8–17 depending on library support
+Build issues	Incorrect or missing Maven config	Reimport Maven project / check pom.xml for errors
+
+🧪 2. Web Element Interaction Issues
+Issue	Root Cause	Solution
+ElementNotInteractableException	Element not visible or not loaded yet	Use explicit waits (WebDriverWait)
+NoSuchElementException	Incorrect or dynamic locator	Validate locator in browser dev tools and use relative XPath/CSS
+Elements in iframe	Trying to access an element inside an iframe	Use driver.switchTo().frame() before interacting
+Pop-ups or alerts	Alert window blocks interaction	Handle with driver.switchTo().alert()
+Multiple windows/tabs	Trying to interact without switching	Use getWindowHandles() to switch to correct tab/window
+
+⏳ 3. Timing & Synchronization Issues
+Issue	Root Cause	Solution
+Script runs too fast	Page elements not loaded	Add explicit waits (best) or Thread.sleep() (temporary)
+StaleElementReferenceException	DOM updated, element reference lost	Re-locate the element right before action
+Asynchronous JS elements	Modern web apps (React, Angular) load dynamically	Use conditions like elementToBeClickable, presenceOfElementLocated, etc.
+
+🗃️ 4. Framework-Level Design Issues
+Issue	Root Cause	Solution
+Hard-coded values	URL, credentials, locators in script	Externalize using config.properties, data files, environment variables
+Unstructured code	No separation of logic and test	Use Page Object Model (POM) for maintainability
+No reusability	Repeated code for browser setup, teardown	Use utility classes or test base class
+Test execution is manual	No test runner integrated	Use TestNG or JUnit for test execution & grouping
+
+📊 5. Reporting & Logging Issues
+Issue	Root Cause	Solution
+No test result visibility	Just using System.out.println	Integrate ExtentReports / Allure Reports
+Hard to debug failures	No logs	Use Log4j or SLF4J for proper logging
+Screenshots missing	Not capturing on failure	Add screenshot capture in @AfterMethod or test failure hooks
+
+🔁 6. Continuous Integration (CI/CD) Issues
+Issue	Root Cause	Solution
+Script works locally but fails in Jenkins	Environment differences	Use headless mode or configure Jenkins agent properly
+Driver not found in CI/CD	Path issues	Use WebDriverManager or set drivers in pipeline config
+Flaky tests	Timing or test dependencies	Use retry logic, proper waits, and keep tests isolated
+
+📦 7. Real-Time Project Issues
+Problem	Solution
+Business logic changes frequently	Keep locators and logic loosely coupled via Page Object Model
+DOM elements have dynamic IDs	Use XPath functions like contains(), starts-with()
+Parallel execution needed	Use TestNG + ThreadLocal WebDriver or Selenium Grid
+Need to test across browsers	Use @Parameters to handle cross-browser testing
+
+✅ Pro Tips:
+	• Start simple, and gradually modularize the framework.
+	• Keep reusable code in utility/helper classes.
+	• Use BaseTest class for setup/teardown methods.
+	• Externalize test data and configs.
+	• Use Git to version control your framework.
+	• Build scripts to clean and build the project automatically.
+
+Can you explain the roles and responsibilities in your project?
+how do you handle flaky test cases
+how to integrate feature files in cucumber
+
