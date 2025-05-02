@@ -1,0 +1,76 @@
+//Extent Report
+String path=System.setProperty("path");
+ExtentSparkReporter report= new ExtentSparkReporter(path);
+
+ExtentReports extent = new ExtentReports();
+extent.attachReporter(report);
+ExtentTest test = new extent.createTest("initial demo");
+extent.flush();
+
+Basic Extent Report Questions
+	1. What is Extent Reports in Selenium?
+		○ Extent Reports is a logging and reporting library used to generate detailed, interactive HTML reports for Selenium test executions.
+	2. What are the key features of Extent Reports?
+		○ Interactive HTML reports
+		○ Logs with screenshots
+		○ Test case status (PASS, FAIL, SKIP)
+		○ Timestamped logs
+		○ Integration with TestNG, JUnit, Cucumber, etc.
+	3. How do you add Extent Reports to your Maven project?
+<dependency>
+    <groupId>com.aventstack</groupId>
+    <artifactId>extentreports</artifactId>
+    <version>5.0.9</version> <!-- Use latest -->
+</dependency>
+Usage and Implementation Questions
+	1. How do you create and initialize an Extent Report in Selenium with Java?
+ExtentReports extent = new ExtentReports();
+ExtentSparkReporter spark = new ExtentSparkReporter("ExtentReport.html");
+extent.attachReporter(spark);
+	2. How do you create a test entry in the Extent Report?
+ExtentTest test = extent.createTest("Login Test");
+test.pass("Navigated to login page");
+	3. How do you flush the report at the end of test execution?
+extent.flush();
+Intermediate/Scenario-Based Questions
+	1. How do you log different test statuses in Extent Report?
+test.pass("Test passed");
+test.fail("Test failed");
+test.skip("Test skipped");
+	2. How do you attach screenshots in Extent Reports?
+test.addScreenCaptureFromPath("screenshots/login_failed.png");
+	3. How do you integrate Extent Reports with TestNG or JUnit?
+		○ Use a TestNG listener (ITestListener) or a base class to initialize and flush Extent Reports in @BeforeSuite and @AfterSuite.
+	4. How do you generate a report for each test suite or each test class?
+	• Create separate Extent Test instances per test method or class.
+	• Store the Extent Test in a ThreadLocal object for parallel execution.
+
+Advanced/Best Practices Questions
+	1. How do you use ThreadLocal for ExtentTest in parallel execution?
+private static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
+public static ExtentTest getTest() {
+    return extentTest.get();
+}
+public static void setTest(ExtentTest test) {
+    extentTest.set(test);
+}
+	1. How do you customize Extent Report (theme, title, name)?
+spark.config().setTheme(Theme.DARK);
+spark.config().setReportName("Automation Test Report");
+spark.config().setDocumentTitle("Selenium Report");
+	1. Can you log exception stack traces in Extent Reports?
+try {
+    // test code
+} catch (Exception e) {
+    test.fail(e);
+}
+	1. What is the difference between ExtentReports v3 and v5?
+	• v5 (current) uses ExtentSparkReporter instead of ExtentHtmlReporter.
+	• v5 supports more custom layouts and reporting capabilities.
+Real-World Scenario Questions
+	1. How do you create a report that includes pass/fail test counts, screenshots, and logs?
+	• Use ExtentTest.log() for logs, addScreenCaptureFromPath() for screenshots, and let ExtentReports handle status counts automatically in the summary.
+	2. How do you generate a separate report for every execution?
+	• Append timestamp to the file name:
+String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+ExtentSparkReporter spark = new ExtentSparkReporter("ExtentReport_" + timestamp + ".html");
