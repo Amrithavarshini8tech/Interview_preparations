@@ -1,0 +1,102 @@
+//Actions Class
+Actions action = new Actions();
+action.moveToElement(element).perform();
+action.ContextClick(Element).perform();
+action.doubleClick(Element).perform();
+action.dragAndDrop(source, target).perform();
+action.keyDown(keys.CONTROL).sendKeys("t").keyUp(Keys.CONTROL).perform();
+
+Basic Questions
+	1. What is the Actions class in Selenium?
+		○ The Actions class in Selenium is used to simulate complex user interactions such as mouse movements, clicks, key presses, drag-and-drop, and more.
+	2. How do you instantiate the Actions class?
+Actions actions = new Actions(driver);
+		○ Where driver is the WebDriver instance.
+	3. What are some common methods provided by the Actions class?
+		○ moveToElement()
+		○ click()
+		○ doubleClick()
+		○ dragAndDrop()
+		○ sendKeys()
+		○ contextClick() (right-click)
+		○ perform()
+
+🔧 Usage and Functionality Questions
+	1. How do you simulate a mouse hover action using Actions?
+WebElement element = driver.findElement(By.id("menu"));
+Actions actions = new Actions(driver);
+actions.moveToElement(element).perform();
+	2. How do you perform a right-click (context-click) using Actions?
+WebElement element = driver.findElement(By.id("rightClickButton"));
+Actions actions = new Actions(driver);
+actions.contextClick(element).perform();
+	3. How do you simulate a drag-and-drop action using Actions?
+WebElement source = driver.findElement(By.id("dragSource"));
+WebElement target = driver.findElement(By.id("dropTarget"));
+Actions actions = new Actions(driver);
+actions.dragAndDrop(source, target).perform();
+	4. How do you simulate typing or sending keys using Actions?
+WebElement inputField = driver.findElement(By.id("inputField"));
+Actions actions = new Actions(driver);
+actions.moveToElement(inputField).click().sendKeys("Hello, World!").perform();
+	5. What is the use of perform() method in Actions class?
+		○ perform() is used to execute the sequence of actions defined in the Actions object. You can chain multiple actions together before calling perform() to execute them.
+actions.moveToElement(element1).click().moveToElement(element2).doubleClick().perform();
+
+Intermediate/Scenario-Based Questions
+	1. How do you simulate pressing and releasing a key using Actions?
+		○ To press a key:
+actions.keyDown(Keys.CONTROL).perform();
+		○ To release a key:
+actions.keyUp(Keys.CONTROL).perform();
+		○ To press and release a key:
+actions.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).perform();
+	2. How do you perform a combination of keyboard and mouse actions (e.g., CTRL + A)?
+Actions actions = new Actions(driver);
+actions.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).perform();
+	3. Can you chain multiple actions using the Actions class?
+		○ Yes, you can chain multiple actions together in a sequence, and they will be executed in order when perform() is called.
+actions.moveToElement(element1).click().moveToElement(element2).doubleClick().perform();
+	4. How do you handle keyboard shortcuts like CTRL + C or CTRL + V using Actions?
+actions.keyDown(Keys.CONTROL).sendKeys("c").keyUp(Keys.CONTROL).perform();  // Copy
+actions.keyDown(Keys.CONTROL).sendKeys("v").keyUp(Keys.CONTROL).perform();  // Paste
+
+Advanced Questions
+	1. How does Actions class handle multiple actions performed on the same element?
+		○ The Actions class allows you to chain multiple actions on the same element. The actions will be executed in the order they are written.
+actions.moveToElement(element).click().doubleClick().perform();
+	2. What is the difference between click() and doubleClick() in Actions?
+		○ click() simulates a single click on the specified element.
+		○ doubleClick() simulates a double click (mouse double-click) on the specified element.
+	3. Can you perform a mouse click and keyboard press on different elements in a single Actions object?
+		○ Yes, you can chain actions on multiple elements and perform them all at once.
+actions.moveToElement(element1).click().moveToElement(element2).sendKeys("text").perform();
+	4. How do you handle mouse movement with a specific offset using Actions?
+		○ Use moveByOffset() to move the mouse by a certain offset (x and y coordinates):
+actions.moveByOffset(50, 100).perform();
+Real-World Scenario Questions
+	1. How would you simulate a scenario where a user hovers over a menu, clicks a submenu, and then drags an element?
+WebElement menu = driver.findElement(By.id("menu"));
+WebElement submenu = driver.findElement(By.id("submenu"));
+WebElement draggableElement = driver.findElement(By.id("dragElement"));
+WebElement dropTarget = driver.findElement(By.id("dropTarget"));
+
+Actions actions = new Actions(driver);
+actions.moveToElement(menu)
+       .moveToElement(submenu)
+       .click()
+       .dragAndDrop(draggableElement, dropTarget)
+       .perform();
+	2. How would you handle a scenario where you need to right-click, choose an option, and then drag-and-drop?
+WebElement rightClickElement = driver.findElement(By.id("rightClickElement"));
+WebElement dragElement = driver.findElement(By.id("dragElement"));
+WebElement dropTarget = driver.findElement(By.id("dropTarget"));
+
+Actions actions = new Actions(driver);
+actions.contextClick(rightClickElement)  // Right-click
+       .moveToElement(driver.findElement(By.id("contextMenuOption"))) // Choose option
+       .click()
+       .dragAndDrop(dragElement, dropTarget)  // Drag-and-drop
+       .perform();
+
+
