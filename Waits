@@ -1,0 +1,93 @@
+//Waits;
+WebDriver wait= new WebDriverWait(driver, 10);
+wait.unitl(ExpectedConditions.visibilityOf(element))
+
+driver.manage().implicityWait(10, TimeUnit.Seconds);
+
+Basic Waits Questions
+	1. What is the difference between implicit wait and explicit wait in Selenium?
+		○ Implicit Wait:
+			§ Set globally for the WebDriver instance.
+			§ Tells Selenium to wait for a specified amount of time before throwing a NoSuchElementException if an element is not found.
+			§ The default is 0 seconds.
+			§ Example:
+driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		○ Explicit Wait:
+			§ Used for waiting for a specific condition to be true (e.g., visibility of an element).
+			§ Applied to a particular element, unlike implicit wait which is applied globally.
+			§ Example:
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("someId")));
+	2. What is an implicit wait in Selenium?
+		○ Implicit wait tells Selenium to wait for a certain amount of time before throwing a NoSuchElementException. If the element is found before the wait time, it proceeds with the execution. The default time is 0.
+driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+ Explicit Waits and Conditions
+	1. What is an explicit wait in Selenium?
+		○ Explicit wait is a Selenium WebDriver object used to wait for a specific condition to be true before proceeding further. It is defined using WebDriverWait in conjunction with ExpectedConditions.
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("submit")));
+	2. What are the common ExpectedConditions in Selenium? Some common ExpectedConditions include:
+		○ visibilityOfElementLocated: Waits for an element to be visible.
+		○ elementToBeClickable: Waits for an element to be clickable.
+		○ presenceOfElementLocated: Waits for an element to be present in the DOM, but not necessarily visible.
+		○ alertIsPresent: Waits for an alert to be present.
+		○ invisibilityOfElementLocated: Waits for an element to be invisible.
+		○ titleContains: Waits for the title of the page to contain a specific string.
+Example:
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("elementId")));
+
+ Intermediate Waits Questions
+	1. What is the difference between presenceOfElementLocated and visibilityOfElementLocated?
+		○ presenceOfElementLocated: Waits for the element to be present in the DOM, regardless of whether it is visible or not.
+		○ visibilityOfElementLocated: Waits for the element to be both present in the DOM and visible on the web page (i.e., the element is rendered and not hidden).
+	2. What is a FluentWait in Selenium, and how is it different from other waits?
+		○ FluentWait allows you to specify:
+			§ A polling frequency (how often the condition is checked)
+			§ A maximum time to wait
+			§ Which exceptions to ignore while waiting
+		○ Unlike WebDriverWait, FluentWait is more flexible.
+		○ Example:
+Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                        .withTimeout(Duration.ofSeconds(30))
+                        .pollingEvery(Duration.ofSeconds(5))
+                        .ignoring(NoSuchElementException.class);
+WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("someId")));
+	3. How do you handle timeouts in Selenium waits?
+		○ Timeout can be handled using try-catch blocks for the exceptions that are thrown when an element is not found within the timeout period, such as TimeoutException.
+		○ Example:
+try {
+    WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("someId")));
+} catch (TimeoutException e) {
+    System.out.println("Element not found within the time limit");
+}
+
+Advanced Waits Questions
+	1. How does WebDriverWait work with expected conditions in Selenium?
+		○ WebDriverWait works by continuously checking a certain condition (such as the visibility of an element) until the timeout is reached. If the condition is met, it proceeds, otherwise, a TimeoutException is thrown.
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("elementId")));
+	2. When should you use implicit wait vs. explicit wait in Selenium?
+		○ Use implicit wait when you expect that most of your elements will take similar time to load across all tests.
+		○ Use explicit wait when you need to wait for specific elements based on their states or conditions (e.g., element visibility or clicking a button after it becomes clickable).
+	3. Can we use implicit wait and explicit wait together in Selenium?
+		○ Yes, but it’s not recommended because they might lead to unexpected results. If both are used together, the implicit wait will be applied globally, and the explicit wait will only apply to the specific condition.
+		○ Best Practice: It is generally better to choose one strategy for clarity and consistency.
+
+ Real-World Scenario Questions
+	1. How would you handle dynamic web elements (like loading indicators or AJAX calls) using waits?
+		○ You can use explicit wait combined with ExpectedConditions to wait for elements that are dynamically loaded.
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+WebElement dynamicElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("dynamicElement")));
+	2. What would you do if the element is not found within the given wait time?
+		○ You can handle the situation by throwing a custom exception or logging an appropriate message.
+try {
+    WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("elementId")));
+} catch (TimeoutException e) {
+    System.out.println("Timeout: Element not found within the specified wait time.");
+}
+	3. How do you ensure your Selenium tests are not unnecessarily delayed due to waits?
+		○ Use appropriate wait times (not too long or too short).
+		○ Use explicit waits over implicit waits for fine-grained control.
+		○ Avoid using Thread.sleep() since it causes fixed delays that aren't related to the actual state of the web elements.
