@@ -1,0 +1,66 @@
+ //Alerts
+Alert alert= driver.switchTo().alert();
+alert.accept();
+alert.dismiss();
+alert.sendkeys("hi");
+alert.getText();
+//Alert using explicit wait
+WebDriver wait= new WebDriverWait(driver,10);
+Alert alert= wait.until(ExpectedConditions.alertsIsPresent());
+alert.accept();
+
+Basic Selenium Alert Questions (Java)
+	1. What are the different types of alerts in Selenium?
+		○ Simple Alert (with OK button)
+		○ Confirmation Alert (OK and Cancel)
+		○ Prompt Alert (Textbox + OK/Cancel)
+	2. How do you handle a simple alert in Selenium using Java?
+Alert alert = driver.switchTo().alert();
+alert. Accept();  // Clicks 'OK'
+	3. How do you dismiss an alert (click 'Cancel') in Java Selenium?
+Alert alert = driver.switchTo().alert();
+alert.dismiss();
+	4. How do you retrieve the text from an alert box?
+Alert alert = driver.switchTo().alert();
+String alertText = alert.getText();
+System.out.println(alertText);
+	5. How do you send input to a prompt alert?
+Alert alert = driver.switchTo().alert();
+alert.sendKeys("Test Input");
+alert.accept();
+ Intermediate/Scenario-Based Questions
+	6. What exception is thrown if there is no alert present?
+		○ NoAlertPresentException
+	7. How can you handle an alert that appears after a delay?
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+alert.accept();
+	8. Can Selenium handle browser pop-ups like file downloads?
+		○ No, Selenium can't handle OS-level pop-ups like file download dialogs. You need tools like Robot class, AutoIT, or Winium for that.
+		
+ Advanced/Tricky Alert Questions
+	9. How to verify the alert text and decide whether to accept or dismiss it?
+Alert alert = driver.switchTo().alert();
+String alertMessage = alert.getText();
+if(alertMessage.equals("Are you sure?")) {
+    alert.accept();
+} else {
+    alert.dismiss();
+}
+	10. How do you test JavaScript alerts triggered by a button click?
+WebElement alertButton = driver.findElement(By.id("alertButton"));
+alertButton.click();
+Alert alert = driver.switchTo().alert();
+alert.accept();
+	11. Can you check if an alert is present without throwing an exception?
+public boolean isAlertPresent(WebDriver driver) {
+    try {
+        driver.switchTo().alert();
+        return true;
+    } catch (NoAlertPresentException e) {
+        return false;
+    }
+}
+Console Output:
+
+false
