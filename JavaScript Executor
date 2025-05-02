@@ -1,0 +1,99 @@
+//javascript Executor
+JvaScriptExecutor js= JavascriptExecutor(driver);
+js.executescript("window.scrollBy(0,500)");//scroll to the bottom
+js.excecutescript("window.scrollBy(0,0)");//scroll to the top
+js.exceutescript("window.scrollBy(0,500)"); scroll to the horizontal
+js.excecuteScript("argument[0].scrollintoview(true);", element)
+
+Basic Questions
+	1. What is JavaScriptExecutor in Selenium?
+		○ JavaScriptExecutor is an interface in Selenium that allows you to execute JavaScript code directly within the context of the browser. It is used when Selenium's native WebDriver commands are not sufficient to interact with elements or execute custom JavaScript operations.
+	2. How do you cast a WebDriver instance to JavaScriptExecutor?
+		○ You can cast the WebDriver object to JavaScriptExecutor to access its methods:
+JavascriptExecutor js = (JavascriptExecutor) driver;
+	3. What are the common methods of JavaScriptExecutor?
+		○ executeScript(String script, Object... args): Executes JavaScript code in the browser. You can pass arguments to the script.
+		○ executeAsyncScript(String script, Object... args): Executes asynchronous JavaScript code, which is useful for waiting for operations that involve time delays (like AJAX).
+
+ Usage and Functionality Questions
+	1. How do you scroll to a specific element using JavaScriptExecutor?
+		○ You can use JavaScriptExecutor to scroll to an element by passing the element's location into JavaScript:
+WebElement element = driver.findElement(By.id("elementId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].scrollIntoView(true);", element);
+	2. How do you click on an element using JavaScriptExecutor?
+		○ You can simulate a click on an element using JavaScript:
+WebElement element = driver.findElement(By.id("elementId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].click();", element);
+	3. How do you enter text into an input field using JavaScriptExecutor?
+		○ You can use JavaScriptExecutor to set a value to an input field:
+WebElement inputField = driver.findElement(By.id("inputId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].value='Test Text';", inputField);
+	4. How do you change the page title using JavaScriptExecutor?
+		○ You can use JavaScript to change the title of the page:
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("document.title='New Page Title';");
+	5. How can you handle alerts using JavaScriptExecutor?
+		○ You can trigger an alert and interact with it:
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("alert('This is a test alert');");
+
+Intermediate Questions
+	1. What is the difference between executeScript() and executeAsyncScript() in JavaScriptExecutor?
+		○ executeScript(): Executes synchronous JavaScript code. It waits for the code to finish execution before continuing.
+		○ executeAsyncScript(): Executes asynchronous JavaScript code. This is useful when working with JavaScript that involves callbacks, such as AJAX requests.
+Example of executeAsyncScript():
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeAsyncScript("var callback = arguments[arguments.length - 1]; setTimeout(function(){ callback('done'); }, 5000);");
+	2. How do you get the title of a page using JavaScriptExecutor?
+JavascriptExecutor js = (JavascriptExecutor) driver;
+String title = js.executeScript("return document.title;").toString();
+System.out.println("Page title: " + title);
+	3. How do you retrieve the value of an element’s attribute using JavaScriptExecutor?
+		○ You can use JavaScriptExecutor to retrieve attributes of an element:
+WebElement element = driver.findElement(By.id("elementId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+String value = js.executeScript("return arguments[0].getAttribute('attributeName');", element).toString();
+System.out.println(value);
+
+ Advanced or Scenario-Based Questions
+	1. How would you handle a scenario where WebDriver commands are not working, and you need to interact with an element using JavaScriptExecutor?
+		○ JavaScriptExecutor is particularly useful when WebDriver’s native commands fail due to JavaScript-heavy web pages. For example, you can use JavaScript Executor to click an element or change its value when traditional Selenium interactions don't work.
+Example for clicking an element:
+WebElement element = driver.findElement(By.id("elementId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].click();", element);
+	2. How can you perform a double-click action using JavaScriptExecutor?
+		○ You can simulate a double-click using JavaScript like this:
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("var evt = new MouseEvent('dblclick', { 'bubbles': true, 'cancelable': true, 'view': window }); arguments[0].dispatchEvent(evt);", element);
+	3. How do you wait for the page to load completely using JavaScriptExecutor?
+		○ You can use JavaScriptExecutor to check if the page is fully loaded by checking the readyState of the document.
+JavascriptExecutor js = (JavascriptExecutor) driver;
+String readyState = js.executeScript("return document.readyState;").toString();
+if (readyState.equals("complete")) {
+    System.out.println("Page is loaded");
+}
+	4. How do you trigger a file download using JavaScriptExecutor?
+		○ You can simulate clicking a download link using JavaScriptExecutor:
+WebElement downloadLink = driver.findElement(By.id("downloadLink"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].click();", downloadLink);
+	5. How would you trigger a custom event or interact with a custom JavaScript function using JavaScriptExecutor?
+		○ You can invoke a custom JavaScript function using JavaScriptExecutor:
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("myCustomFunction();");
+
+ Real-World Scenario Questions
+	1. How would you use JavaScriptExecutor to fill out a form when WebDriver’s sendKeys() is not working?
+		○ If sendKeys() is not working on a form input field (due to issues like shadow DOM), you can use JavaScriptExecutor to fill out the field:
+WebElement inputField = driver.findElement(By.id("inputId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].value='Test Input';", inputField);
+	2. How can you highlight an element using JavaScriptExecutor?
+		○ You can use JavaScriptExecutor to highlight an element by changing its CSS property (e.g., background color):
+WebElement element = driver.findElement(By.id("elementId"));
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("arguments[0].style.border='3px solid red';", element);
