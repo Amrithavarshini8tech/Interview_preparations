@@ -1,0 +1,94 @@
+//windows handle
+String currentWindow=driver.getwindowHandle();
+//window handles using iterator
+Set<String> allWindows=driver.getwindowHandles();
+Iterator it=allWindows.iterator();
+while(it.hasNext())
+{
+  String currentWindow=it.next();
+  driver.switchTo().window(currentWindow);
+  System.out.println(driver.getTitle());
+}
+//windows handles using for each
+Set<String> allWindows=driver.getwindowHandles();
+Iterator it=allWindows.iterator();
+for(String wind: it)
+{
+  driver.switchTo().window(wind);
+  System.out.println(driver.getTitle());
+}
+//windows handles using for loop
+Set<String> allWindows=driver.getwindowHandles();
+List<WebElement> listWindows=new ArrayList<>(allWindows);
+for(int i=0; i<listWindows.size(); i++)
+{
+  String currentWindow=listWindows.get(i);
+  driver.switchTo().window(currentWindow);
+}
+
+
+ Basic Window Handle Questions
+	1. What is a window handle in Selenium?
+		○ A window handle is a unique string identifier for each open browser window or tab managed by the WebDriver.
+	2. How do you get the window handle of the current window?
+String currentWindow = driver.getWindowHandle();
+	3. How do you get all window handles?
+Set<String> allWindows = driver.getWindowHandles();
+	4. How do you switch between windows using Selenium?
+for (String handle : driver.getWindowHandles()) {
+    driver.switchTo().window(handle);
+}
+Intermediate/Scenario-Based Questions
+	1. How do you close only the child window and switch back to the parent?
+String parentWindow = driver.getWindowHandle();
+Set<String> allWindows = driver.getWindowHandles();
+
+for (String window : allWindows) {
+    if (!window.equals(parentWindow)) {
+        driver.switchTo().window(window);
+        driver.close();  // Close child window
+    }
+}
+
+driver.switchTo().window(parentWindow);  // Back to parent
+	2. How can you perform actions in a new tab or window opened after clicking a link?
+		○ First click the link, then switch to the new window:
+driver.findElement(By.linkText("Open Window")).click();
+Set<String> handles = driver.getWindowHandles();
+
+for (String handle : handles) {
+    driver.switchTo().window(handle);
+    if (!driver.getTitle().equals("Parent Window Title")) {
+        break;
+    }
+}
+	3. How do you ensure you're switching to the correct window?
+		○ Use driver.getTitle() or driver.getCurrentUrl() to identify the right one:
+for (String handle : driver.getWindowHandles()) {
+    driver.switchTo().window(handle);
+    if (driver.getTitle().contains("Expected Title")) {
+        break;
+    }
+}
+Advanced/Edge Cases
+	1. What happens if you switch to a closed window?
+		○ Selenium throws a NoSuchWindowException.
+	2. How do you open a new tab using JavaScript?
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("window.open()");
+	3. Can you switch between tabs using keyboard shortcuts in Selenium?
+		○ Yes, using the Robot class:
+Robot robot = new Robot();
+robot.keyPress(KeyEvent.VK_CONTROL);
+robot.keyPress(KeyEvent.VK_TAB);
+robot.keyRelease(KeyEvent.VK_TAB);
+robot.keyRelease(KeyEvent.VK_CONTROL);
+ Bonus: Common Mistakes
+	• Forgetting to switch back to the original window.
+	• Assuming order of getWindowHandles() – it returns a Set, which is unordered.
+	• Using Thread.sleep() instead of WebDriverWait when waiting for the new window to open.
+
+
+
+
+
