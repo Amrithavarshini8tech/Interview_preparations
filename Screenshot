@@ -1,0 +1,56 @@
+//Screenshot
+TakesScreenshot tb= (TakesScreenshot(driver));
+File src= tb.TakesScreenshotAs(Output Type.File);
+File des= new File("");
+FileUtils.copyFile(src,des);
+
+Basic Screenshot Questions
+	1. How do you take a screenshot in Selenium using Java?
+File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+FileUtils.copyFile(screenshot, new File("screenshot.png"));
+	2. Which interface is used to capture screenshots in Selenium?
+		○ TakesScreenshot interface.
+	3. What are the different OutputType options available for screenshots?
+		○ OutputType.FILE
+		○ OutputType.BYTES
+		○ OutputType.BASE64
+	4. Can Selenium take a screenshot of a specific element?
+		○ Yes, if you're using Selenium 4+:
+WebElement element = driver.findElement(By.id("elementId"));
+File screenshot = element.getScreenshotAs(OutputType.FILE);
+FileUtils.copyFile(screenshot, new File("element.png"));
+ Intermediate/Scenario-Based Questions
+	1. How do you take a screenshot when a test fails automatically?
+		○ Integrate with a test framework like TestNG or JUnit, using listeners:
+@AfterMethod
+public void tearDown(ITestResult result) {
+    if (ITestResult.FAILURE == result.getStatus()) {
+        File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(screenshot, new File("failed_" + result.getName() + ".png"));
+    }
+}
+	2. How do you capture screenshots in headless mode?
+		○ Works the same way as normal mode, as long as you're using Chrome/Firefox in headless:
+ChromeOptions options = new ChromeOptions();
+options.addArguments("--headless");
+WebDriver driver = new ChromeDriver(options);
+Advanced/Tricky Questions
+	1. How do you embed a screenshot into a report (like ExtentReports or Allure)?
+		○ For ExtentReports:
+test.log(Status.FAIL, "Screenshot attached: " + test.addScreenCaptureFromPath("screenshot.png"));
+	2. How do you take full-page screenshots (not just the visible viewport)?
+		○ Selenium 4 supports full-page screenshots in Firefox:
+FirefoxDriver driver = new FirefoxDriver();
+File screenshot = ((FirefoxDriver) driver).getFullPageScreenshotAs(OutputType.FILE);
+	3. Can you capture screenshots in parallel tests?
+		○ Yes, but ensure each screenshot file has a unique name (e.g., timestamp + thread ID).
+	4. How do you save screenshots with timestamped filenames?
+String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+FileUtils.copyFile(screenshot, new File("screenshot_" + timestamp + ".png"));
+Common Pitfalls
+	• ClassCastException: Forgetting to cast the driver to TakesScreenshot.
+	• FileNotFoundException: Trying to write to a path that doesn’t exist.
+	• Screenshot taken too early: Take after waits or page load.
+
+
