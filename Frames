@@ -1,0 +1,58 @@
+//Frames
+driver.switchTo().frame(0); //using Index
+driver.switchTo().frame(framename/frameID); //using frame name/id
+driver.switchTo().frame(iframeElement);//using iframeElement
+driver.switchTo().parentFrame();//switch to parent window
+driver.switchTo().defaultContent();// switch back to normal content/main page
+//Find the count of iFrames
+List<WebElement> frames= driver.findElements(By.tagName("iframe"));
+System.out.println("iframe.size()");
+// Switch to the outer iframe
+driver.switchTo().frame("outerIframeId");
+// Switch to the inner iframe within the outer iframe
+driver.switchTo().frame("innerIframeId");
+driver.switchTo().parentFrame();
+driver.switchTo().defaultContent();
+
+Basic Frame Questions
+	1. What is a frame or iframe in HTML?
+		○ A frame (or more commonly, an iframe) is an HTML element used to embed another HTML document within the current one. Selenium needs to switch to the frame to interact with elements inside it.
+	2. How do you switch to a frame in Selenium?
+		○ Using one of the following:
+driver.switchTo().frame(0);                  // By index
+driver.switchTo().frame("frameName");        // By name or ID
+driver.switchTo().frame(driver.findElement(By.xpath("//iframe")));  // By WebElement
+	3. How do you switch back to the main document from a frame?
+driver.switchTo().defaultContent();  // Goes to top-level DOM
+	4. What is the difference between defaultContent() and parentFrame()?
+		○ defaultContent() switches to the top-level page.
+		○ parentFrame() switches one level up in the frame hierarchy.
+
+Intermediate/Scenario-Based Questions
+	1. How can you count the number of frames in a page?
+List<WebElement> frames = driver.findElements(By.tagName("iframe"));
+System.out.println("Number of frames: " + frames.size());
+	2. How do you interact with an element inside a nested frame (frame within a frame)?
+driver.switchTo().frame("outerFrame");
+driver.switchTo().frame("innerFrame");
+// Interact with element
+driver.switchTo().defaultContent();  // Return to main content
+	3. How do you handle a situation where the frame is dynamic (ID or name changes)?
+		○ Use WebElement with a stable locator:
+WebElement frame = driver.findElement(By.xpath("//iframe[contains(@src, 'dynamicPart')]"));
+driver.switchTo().frame(frame);
+
+Advanced/Tricky Questions
+	1. Can you switch to a frame using JavaScriptExecutor?
+		○ Yes, but not common for switching. You might use it to find or interact with content:
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("window.frames[0].document.body.innerHTML");
+	2. What exceptions can you get while switching to a frame?
+		○ NoSuchFrameException
+		○ StaleElementReferenceException (if frame reference is old)
+		○ WebDriverException (if browser issues exist)
+	3. What happens if you try to access an element inside a frame without switching?
+		○ Selenium will throw a NoSuchElementException, because it cannot see inside a frame unless you switch context.
+
+
+
