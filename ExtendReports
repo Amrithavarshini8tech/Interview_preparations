@@ -1,10 +1,23 @@
 ////////////////////////////////////Extent Report//////////////////////////////////////////
-String path=System.setProperty("path");
-ExtentSparkReporter report= new ExtentSparkReporter(path);
+//Creates a Spark HTML report at the specified path
+String path = "reports/index.html";
+
+//ExtentSparkReporter is used to configure the look and feel of the report (e.g., theme, title, etc.).
+ExtentSparkReporter report = new ExtentSparkReporter(path);
+
+
+//Creates an instance of ExtentReports — the main class used to manage and generate reports.
 ExtentReports extent = new ExtentReports();
+
+//Attaches the configured ExtentSparkReporter to the ExtentReports instance.
 extent.attachReporter(report);
-ExtentTest test = new extent.createTest("initial demo");
-extent.flush();
+
+//This creates a test entry in the report titled "initial demo".
+ExtentTest test = extent.createTest("initial demo");
+
+//Writes all logs to the report file. This finalizes the report and must be called at the end of the test execution.
+extent.flush();  // Generates the final report
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 Basic Extent Report Questions
 	1. What is Extent Reports in Selenium?
