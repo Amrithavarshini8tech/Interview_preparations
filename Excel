@@ -1,0 +1,78 @@
+//Excel
+File f= new File("");
+Workbook bk= new XSSFWorkbook(bk);
+Sheet sh= bk.getSheet("datasheet");
+Row r= sh.getRow(0);
+String cellValue= r.getCell(0).getStringCellValue();
+// for sheet numbers
+int sheet = bk.getNumberOfSheets();
+//for sheet name
+String sheetName= bk.getSheetName(i);
+//number of rows
+int rowCount= getPhysicalNumberOfRows();
+//number of columns
+int colCount=r.getLastCellNum();
+
+ Basic Excel Integration Questions
+	1. Can Selenium interact with Excel files directly?
+		○ No, Selenium itself does not support Excel handling. You need external libraries like Apache POI .
+	2. Which library is commonly used to read/write Excel files in Java?
+		○ Apache POI (org.apache.poi package)
+	3. What is the difference between .xls and .xlsx in Apache POI?
+		○ .xls (Excel 97–2003): Use HSSFWorkbook
+		○ .xlsx (Excel 2007+): Use XSSFWorkbook
+		
+Common Code-Based Questions
+	1. How do you read data from an Excel cell using Apache POI?
+FileInputStream fis = new FileInputStream("data.xlsx");
+XSSFWorkbook workbook = new XSSFWorkbook(fis);
+XSSFSheet sheet = workbook.getSheet("Sheet1");
+String value = sheet.getRow(0).getCell(0).getStringCellValue();
+System.out.println(value);
+workbook.close();
+	2. How do you write data to an Excel file using Java?
+FileInputStream fis = new FileInputStream("data.xlsx");
+XSSFWorkbook workbook = new XSSFWorkbook(fis);
+XSSFSheet sheet = workbook.getSheet("Sheet1");
+sheet.getRow(0).createCell(1).setCellValue("Passed");
+FileOutputStream fos = new FileOutputStream("data.xlsx");
+workbook.write(fos);
+workbook.close();
+fos.close();
+	3. How do you get the number of rows in an Excel sheet?
+int rowCount = sheet.getLastRowNum();  // 0-based index
+	4. How do you handle different Excel cell types (string, numeric, boolean)?
+Cell cell = sheet.getRow(0).getCell(0);
+switch (cell.getCellType()) {
+    case STRING: System.out.println(cell.getStringCellValue()); break;
+    case NUMERIC: System.out.println(cell.getNumericCellValue()); break;
+    case BOOLEAN: System.out.println(cell.getBooleanCellValue()); break;
+}
+Intermediate/Scenario-Based Questions
+	1. How do you perform data-driven testing using Excel and Selenium?
+		○ Create a data provider method in TestNG that reads from Excel, and pass it to your test:
+@DataProvider
+public Object[][] getData() {
+    // Read Excel and return as Object[][]
+}
+
+@Test(dataProvider = "getData")
+public void testLogin(String username, String password) {
+    // Use Selenium to test login
+}
+	2. How do you read an entire Excel sheet into a 2D array?
+		○ This is common for TestNG data providers.
+	3. Can you read a formula cell using Apache POI?
+	• Yes, but you need to evaluate the formula:
+FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+CellValue cellValue = evaluator.evaluate(cell);
+System.out.println(cellValue.getStringValue());
+Advanced/Practical Interview Questions
+	1. How do you handle Excel read/write when tests run in parallel (thread-safe)?
+	• Avoid shared Workbook instances across threads, or synchronize the read/write logic.
+	2. How do you read data from a cell based on column name, not index?
+	• Read the header row to map column names to indexes.
+	3. How can you validate that Selenium output matches expected Excel data?
+	• Compare actual values (from the web page) with values read from Excel using assertions.
+	4. How to read a cell from an Excel sheet whose location is dynamic (not fixed)?
+	• Loop through rows and columns using getRow(i).getCell(j), check cell value using getStringCellValue() or toString().
