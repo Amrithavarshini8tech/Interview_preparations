@@ -1,19 +1,21 @@
 ////////////////////////////////////Extent Report//////////////////////////////////////////
 1. What is Extent Reports in Selenium?
 		○ Extent Reports is a logging and reporting library used to generate detailed, interactive HTML reports for Selenium test executions.
+
 2. What are the key features of Extent Reports?
 		○ Interactive HTML reports
 		○ Logs with screenshots
 		○ Test case status (PASS, FAIL, SKIP)
 		○ Timestamped logs
 		○ Integration with TestNG, JUnit, Cucumber, etc.
+
 3. How do you add Extent Reports to your Maven project?
 <dependency>
     <groupId>com.aventstack</groupId>
     <artifactId>extentreports</artifactId>
     <version>5.0.9</version> <!-- Use latest -->
 </dependency>
-Usage and Implementation Questions
+
 4. How do you create and initialize an Extent Report in Selenium with Java?
 
 //Creates a Spark HTML report at the specified path
@@ -36,20 +38,25 @@ ExtentTest test = extent.createTest("initial demo");
 extent.flush();  // Generates the final report
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 5. How do you create a test entry in the Extent Report?
 ExtentTest test = extent.createTest("Login Test");
 test.pass("Navigated to login page");
+
 6. How do you flush the report at the end of test execution?
 extent.flush();
-Intermediate/Scenario-Based Questions
+
 7. How do you log different test statuses in Extent Report?
 test.pass("Test passed");
 test.fail("Test failed");
 test.skip("Test skipped");
-	2. How do you attach screenshots in Extent Reports?
+
+8. How do you attach screenshots in Extent Reports?
 test.addScreenCaptureFromPath("screenshots/login_failed.png");
-	3. How do you integrate Extent Reports with TestNG or JUnit?
+
+9. How do you integrate Extent Reports with TestNG or JUnit?
 		○ Use a TestNG listener (ITestListener) or a base class to initialize and flush Extent Reports in @BeforeSuite and @AfterSuite.
+
 	4. How do you generate a report for each test suite or each test class?
 	• Create separate Extent Test instances per test method or class.
 	• Store the Extent Test in a ThreadLocal object for parallel execution.
