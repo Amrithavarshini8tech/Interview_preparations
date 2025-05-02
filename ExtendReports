@@ -1,4 +1,21 @@
 ////////////////////////////////////Extent Report//////////////////////////////////////////
+1. What is Extent Reports in Selenium?
+		○ Extent Reports is a logging and reporting library used to generate detailed, interactive HTML reports for Selenium test executions.
+2. What are the key features of Extent Reports?
+		○ Interactive HTML reports
+		○ Logs with screenshots
+		○ Test case status (PASS, FAIL, SKIP)
+		○ Timestamped logs
+		○ Integration with TestNG, JUnit, Cucumber, etc.
+3. How do you add Extent Reports to your Maven project?
+<dependency>
+    <groupId>com.aventstack</groupId>
+    <artifactId>extentreports</artifactId>
+    <version>5.0.9</version> <!-- Use latest -->
+</dependency>
+Usage and Implementation Questions
+4. How do you create and initialize an Extent Report in Selenium with Java?
+
 //Creates a Spark HTML report at the specified path
 String path = "reports/index.html";
 
@@ -19,33 +36,13 @@ ExtentTest test = extent.createTest("initial demo");
 extent.flush();  // Generates the final report
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-Basic Extent Report Questions
-	1. What is Extent Reports in Selenium?
-		○ Extent Reports is a logging and reporting library used to generate detailed, interactive HTML reports for Selenium test executions.
-	2. What are the key features of Extent Reports?
-		○ Interactive HTML reports
-		○ Logs with screenshots
-		○ Test case status (PASS, FAIL, SKIP)
-		○ Timestamped logs
-		○ Integration with TestNG, JUnit, Cucumber, etc.
-	3. How do you add Extent Reports to your Maven project?
-<dependency>
-    <groupId>com.aventstack</groupId>
-    <artifactId>extentreports</artifactId>
-    <version>5.0.9</version> <!-- Use latest -->
-</dependency>
-Usage and Implementation Questions
-	1. How do you create and initialize an Extent Report in Selenium with Java?
-ExtentReports extent = new ExtentReports();
-ExtentSparkReporter spark = new ExtentSparkReporter("ExtentReport.html");
-extent.attachReporter(spark);
-	2. How do you create a test entry in the Extent Report?
+5. How do you create a test entry in the Extent Report?
 ExtentTest test = extent.createTest("Login Test");
 test.pass("Navigated to login page");
-	3. How do you flush the report at the end of test execution?
+6. How do you flush the report at the end of test execution?
 extent.flush();
 Intermediate/Scenario-Based Questions
-	1. How do you log different test statuses in Extent Report?
+7. How do you log different test statuses in Extent Report?
 test.pass("Test passed");
 test.fail("Test failed");
 test.skip("Test skipped");
@@ -86,3 +83,126 @@ Real-World Scenario Questions
 	• Append timestamp to the file name:
 String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 ExtentSparkReporter spark = new ExtentSparkReporter("ExtentReport_" + timestamp + ".html");
+
+
+Integrating **ExtentReports** with **TestNG's ITestListener** interface allows you to automatically generate detailed reports based on test events like success, failure, and skip. Here's a complete guide to doing that:
+
+---
+
+## ✅ 1. **Add Dependencies**
+
+If you're using Maven, add this to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.aventstack</groupId>
+    <artifactId>extentreports</artifactId>
+    <version>5.0.9</version> <!-- use the latest available -->
+</dependency>
+```
+
+---
+
+## ✅ 2. **Create Listener Class Implementing ITestListener**
+
+```java
+import com.aventstack.extentreports.*;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import org.testng.ITestContext;
+import org.testng.ITestListener;
+import org.testng.ITestResult;
+
+public class ExtentTestNGListener implements ITestListener {
+
+    private static ExtentReports extent;
+    private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+
+    @Override
+    public void onStart(ITestContext context) {
+        String path = System.getProperty("user.dir") + "/reports/index.html";
+        ExtentSparkReporter reporter = new ExtentSparkReporter(path);
+        reporter.config().setReportName("Test Automation Report");
+        reporter.config().setDocumentTitle("Automation Results");
+
+        extent = new ExtentReports();
+        extent.attachReporter(reporter);
+        extent.setSystemInfo("Tester", "Your Name");
+    }
+
+    @Override
+    public void onTestStart(ITestResult result) {
+        ExtentTest extentTest = extent.createTest(result.getMethod().getMethodName());
+        test.set(extentTest);
+    }
+
+    @Override
+    public void onTestSuccess(ITestResult result) {
+        test.get().pass("Test passed");
+    }
+
+    @Override
+    public void onTestFailure(ITestResult result) {
+        test.get().fail(result.getThrowable());
+    }
+
+    @Override
+    public void onTestSkipped(ITestResult result) {
+        test.get().skip("Test skipped");
+    }
+
+    @Override
+    public void onFinish(ITestContext context) {
+        extent.flush();
+    }
+}
+```
+
+---
+
+## ✅ 3. **Attach the Listener to Your TestNG Suite**
+
+You can do this in two ways:
+
+### 🔹 A. **Via testng.xml:**
+
+```xml
+<listeners>
+    <listener class-name="your.package.ExtentTestNGListener"/>
+</listeners>
+```
+
+### 🔹 B. **Via @Listeners Annotation:**
+
+```java
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+
+@Listeners(your.package.ExtentTestNGListener.class)
+public class SampleTest {
+
+    @Test
+    public void demoTestPass() {
+        assert true;
+    }
+
+    @Test
+    public void demoTestFail() {
+        assert false;
+    }
+}
+```
+
+---
+
+### ✅ 4. **Run and View Report**
+
+After running your tests, the report will be generated at:
+
+```
+<project-root>/reports/index.html
+```
+
+---
+
+Would you like to add screenshot capture for failed tests as well?
+
