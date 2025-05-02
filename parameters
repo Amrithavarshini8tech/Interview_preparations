@@ -1,0 +1,82 @@
+//parameters
+<parameter name="" value=""/>
+@Parameters({"name"})
+public void parameterizedTest(String myName)
+{
+  
+}
+
+@Parameters in Java, particularly in the context of TestNG
+Basic Questions
+	1. What is the purpose of @Parameters in TestNG?
+		○ @Parameters is used to pass values from the testng.xml file to your test methods, constructors, or configuration methods (like @BeforeTest, @BeforeClass, etc.).
+	2. How do you use @Parameters in a TestNG test method?
+@Test
+@Parameters("browser")
+public void testSetup(String browser) {
+    System.out.println("Browser passed: " + browser);
+}
+	3. How do you define parameters in the testng.xml file?
+<suite name="Suite1">
+    <test name="Test1">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="tests.MyTestClass"/>
+        </classes>
+    </test>
+</suite>
+
+Intermediate Questions
+	1. What is the difference between @Parameters and @DataProvider in TestNG?
+		○ @Parameters: Passes single or static values from XML.
+		○ @DataProvider: Supplies multiple sets of data programmatically, often for data-driven testing.
+	2. Can @Parameters be used with @BeforeClass or @BeforeTest?
+		○ Yes, you can use it with any method that accepts parameters, including @BeforeSuite, @BeforeTest, @BeforeClass, etc.
+@BeforeTest
+@Parameters("url")
+public void setup(String url) {
+    driver.get(url);
+}
+	3. What happens if the parameter is not defined in testng.xml?
+		○ TestNG will throw an exception like:
+org.testng.TestNGException: Parameter 'browser' is required but was not found in the suite.
+ Advanced or Practical Questions
+	1. How can you pass multiple parameters using @Parameters?
+@Test
+@Parameters({"username", "password"})
+public void loginTest(String user, String pass) {
+    System.out.println(user + " | " + pass);
+}
+	2. Can @Parameters be used together with @DataProvider?
+		○ Not directly. @Parameters is static and comes from XML; @DataProvider is dynamic. You typically choose one based on use case.
+	3. How do you pass parameters to constructors in TestNG using @Parameters?
+public class MyTest {
+    private String browser;
+
+@Parameters("browser")
+    public MyTest(String browser) {
+        this.browser = browser;
+    }
+
+@Test
+    public void testMethod() {
+        System.out.println("Running test on: " + browser);
+    }
+}
+
+Note: This works only if you're using a factory or configuring the constructor use properly.
+
+Real-World Usage Scenario
+	1. How can @Parameters help manage different environments (dev, qa, prod)?
+	• You can define an env parameter in testng.xml, and use it in your setup methods to load different config files or URLs.
+<parameter name="env" value="qa"/>
+@BeforeTest
+@Parameters("env")
+public void setupEnv(String env) {
+    if (env.equals("qa")) {
+        baseUrl = "https://qa.example.com";
+    } else if (env.equals("prod")) {
+        baseUrl = "https://prod.example.com";
+    }
+}
+
