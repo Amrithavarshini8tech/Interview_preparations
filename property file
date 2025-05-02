@@ -1,0 +1,100 @@
+//Property File
+FileReader reader= new FileReader();
+Properties prop= new Properties();
+prop.reader(reader);
+String value= prop.getProperty("");
+
+ Basic Questions on Properties Files
+	1. What is a .properties file in Java?
+		○ It is a plain text file used to store key-value pairs.
+		○ Commonly used for storing configurations, such as URLs, credentials, timeouts, or browser settings.
+	2. Why are properties files used in Selenium frameworks?
+		○ To externalize test configuration so that changing values like URLs, browser types, or credentials doesn't require modifying the source code.
+	3. What is the syntax of a properties file?
+browser=chrome
+baseUrl=https://example.com
+username=admin
+password=secret123
+
+Code & Usage Questions
+	1. How do you read values from a .properties file in Java?
+Properties prop = new Properties();
+FileInputStream fis = new FileInputStream("config.properties");
+prop.load(fis);
+String browser = prop.getProperty("browser");
+	2. How do you use the properties in a Selenium test?
+WebDriver driver;
+if (browser.equalsIgnoreCase("chrome")) {
+    driver = new ChromeDriver();
+}
+driver.get(prop.getProperty("baseUrl"));
+	3. How do you handle missing or null property values?
+		○ Use a default fallback:
+String browser = prop.getProperty("browser", "chrome");
+
+ Intermediate/Scenario-Based Questions
+	1. Can you write/update a value in a .properties file?
+prop.setProperty("status", "passed");
+FileOutputStream out = new FileOutputStream("config.properties");
+prop.store(out, "Test status updated");
+	Great question!
+	prop.store(out, "Test status updated");
+	This line is used to save or write the key-value pairs from a Properties object to a .properties file (via the FileOutputStream out), with an optional comment at the top of the file.
+	
+	 Breakdown:
+		• prop: An instance of the Properties class in Java.
+		• store(...): A method in the Properties class that writes the properties to an output stream (e.g., file).
+		• out: A FileOutputStream connected to the .properties file you're writing to.
+		• "Test status updated": This is a comment that will appear at the top of the file (usually as a timestamped note).
+	 Example:
+	Suppose you run this code:
+	Properties prop = new Properties();
+prop.setProperty("status", "passed");
+FileOutputStream out = new FileOutputStream("result.properties");
+prop.store(out, "Test status updated");
+out.close();
+	The resulting result.properties file will look like this:
+	#Test status updated
+#Mon Apr 29 14:37:18 IST 2025
+status=passed
+	Use Case in Selenium:
+	You might use this when you want to log test outcomes or environment states dynamically to a .properties file, e.g., in reporting or CI pipelines.
+	
+	2. How do you manage different environments using properties files?
+		○ Use different files like:
+			§ config-dev.properties
+			§ config-test.properties
+			§ config-prod.properties
+		○ Load based on a parameter:
+String env = System.getProperty("env", "dev");
+FileInputStream fis = new FileInputStream("config-" + env + ".properties");
+	3. How do you pass property values at runtime via command line or Maven?
+mvn test -Denv=qa
+Then read it in code:
+String env = System.getProperty("env");
+
+ Advanced/Design-Level Questions
+	1. How do you design a framework to support dynamic configuration using properties?
+	• Create a ConfigReader or PropertyManager class to:
+		○ Load the appropriate file
+		○ Provide typed getter methods
+		○ Handle missing/invalid keys
+	2. How do you cache or reuse loaded property files efficiently?
+	• Load once in a static block or singleton:
+private static Properties prop = new Properties();
+static {
+    try {
+        FileInputStream fis = new FileInputStream("config.properties");
+        prop.load(fis);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+public static String get(String key) {
+    return prop.getProperty(key);
+}
+	3. What are the limitations of using .properties files?
+	• No structured hierarchy (unlike JSON or XML)
+	• Not suitable for complex data types
+	• No built-in support for encryption (e.g., storing secure credentials)
